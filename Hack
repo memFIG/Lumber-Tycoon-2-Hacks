@@ -1,0 +1,290 @@
+if not _G.FullBrightExecuted then
+
+	_G.FullBrightEnabled = false
+
+	_G.NormalLightingSettings = {
+		Brightness = game:GetService("Lighting").Brightness,
+		ClockTime = game:GetService("Lighting").ClockTime,
+		FogEnd = game:GetService("Lighting").FogEnd,
+		GlobalShadows = game:GetService("Lighting").GlobalShadows,
+		Ambient = game:GetService("Lighting").Ambient
+	}
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("Brightness"):Connect(function()
+		if game:GetService("Lighting").Brightness ~= 1 and game:GetService("Lighting").Brightness ~= _G.NormalLightingSettings.Brightness then
+			_G.NormalLightingSettings.Brightness = game:GetService("Lighting").Brightness
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").Brightness = 1
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("ClockTime"):Connect(function()
+		if game:GetService("Lighting").ClockTime ~= 12 and game:GetService("Lighting").ClockTime ~= _G.NormalLightingSettings.ClockTime then
+			_G.NormalLightingSettings.ClockTime = game:GetService("Lighting").ClockTime
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").ClockTime = 12
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(function()
+		if game:GetService("Lighting").FogEnd ~= 786543 and game:GetService("Lighting").FogEnd ~= _G.NormalLightingSettings.FogEnd then
+			_G.NormalLightingSettings.FogEnd = game:GetService("Lighting").FogEnd
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").FogEnd = 786543
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("GlobalShadows"):Connect(function()
+		if game:GetService("Lighting").GlobalShadows ~= false and game:GetService("Lighting").GlobalShadows ~= _G.NormalLightingSettings.GlobalShadows then
+			_G.NormalLightingSettings.GlobalShadows = game:GetService("Lighting").GlobalShadows
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").GlobalShadows = false
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("Ambient"):Connect(function()
+		if game:GetService("Lighting").Ambient ~= Color3.fromRGB(178, 178, 178) and game:GetService("Lighting").Ambient ~= _G.NormalLightingSettings.Ambient then
+			_G.NormalLightingSettings.Ambient = game:GetService("Lighting").Ambient
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+		end
+	end)
+
+	game:GetService("Lighting").Brightness = 1
+	game:GetService("Lighting").ClockTime = 12
+	game:GetService("Lighting").FogEnd = 786543
+	game:GetService("Lighting").GlobalShadows = false
+	game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+
+	local LatestValue = true
+	spawn(function()
+		repeat
+			wait()
+		until _G.FullBrightEnabled
+		while wait() do
+			if _G.FullBrightEnabled ~= LatestValue then
+				if not _G.FullBrightEnabled then
+					game:GetService("Lighting").Brightness = _G.NormalLightingSettings.Brightness
+					game:GetService("Lighting").ClockTime = _G.NormalLightingSettings.ClockTime
+					game:GetService("Lighting").FogEnd = _G.NormalLightingSettings.FogEnd
+					game:GetService("Lighting").GlobalShadows = _G.NormalLightingSettings.GlobalShadows
+					game:GetService("Lighting").Ambient = _G.NormalLightingSettings.Ambient
+				else
+					game:GetService("Lighting").Brightness = 1
+					game:GetService("Lighting").ClockTime = 12
+					game:GetService("Lighting").FogEnd = 786543
+					game:GetService("Lighting").GlobalShadows = false
+					game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+				end
+				LatestValue = not LatestValue
+			end
+		end
+	end)
+end
+
+_G.FullBrightExecuted = true
+_G.FullBrightEnabled = not _G.FullBrightEnabled
+
+local DupingCash = false
+
+local Services = setmetatable({}, {
+    __index = function(self, index)
+        local s = game:GetService(index)
+        if s then return s end
+    end
+})
+
+local Notify = function(title, text, duration)
+    Services.StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration
+    })
+end
+
+Notify("Tech Hacks", "Fullbright Has Been Enabled!", 10)
+
+local Library = loadstring(game:HttpGet'https://ataias.xyz/new-ui.lua')()
+local DupingCash = false
+
+local Services = setmetatable({}, {
+    __index = function(self, index)
+        local s = game:GetService(index)
+        if s then return s end
+    end
+})
+
+local Notify = function(title, text, duration)
+    Services.StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration
+    })
+end
+
+local Client = Services.Players.LocalPlayer
+
+local Functions; Functions = {
+    DupeInventory = function()
+        local Head = Client.Character:WaitForChild("Head")
+        local Pos = Head.CFrame
+        Head:Destroy()
+        for _, v in next, Client.Backpack:GetChildren() do
+            task.spawn(function()
+                Services.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Drop tool", Pos)
+            end)
+        end
+        Client.CharacterAdded:Wait()
+        local hrp = Client.Character:WaitForChild("HumanoidRootPart")
+        wait(1)
+        hrp.CFrame = Pos
+        if Library._flags.DupeInventory == true then
+            Functions.DupeInventory()
+        end
+    end,
+    SendMoney = function(plr, amt)
+        return Services.ReplicatedStorage.Transactions.ClientToServer.Donate:InvokeServer(plr, amt, Client.CurrentSaveSlot.Value)
+    end,
+    SaveSlot = function()
+        Services.ReplicatedStorage.LoadSaveRequests.RequestSave:InvokeServer(Client.CurrentSaveSlot.Value)
+    end,
+    DupeCash = function()
+        if DupingCash then return end
+        local CurrentSlot = Client.CurrentSaveSlot
+        local ReloadToSlot = CurrentSlot.Value
+        if CurrentSlot.Value == -1 then
+            return Notify("Error!", "You must load your slot to duplicate your cash.", 5)
+        end
+        DupingCash = true
+        if not Library._flags.DisableSave then
+            Library:UpdateToggle("DisableSave")
+            wait()
+        end
+        local DupeAmt = Client.leaderstats.Money.Value
+        Notify("Cash Dupe", "Waiting for load cooldown", 3)
+        repeat
+            wait(.25)
+        until Services.ReplicatedStorage.LoadSaveRequests.ClientMayLoad:InvokeServer() == true
+        Notify("Cash Dupe", "Sending cash to client", 3)
+        repeat
+            task.spawn(function()Functions.SendMoney(Client, DupeAmt)end)
+            wait(.25)
+        until Client.leaderstats.Money.Value == 0
+        Notify("Cash Dupe", "Reloading", 3)
+        Services.ReplicatedStorage.LoadSaveRequests.RequestLoad:InvokeServer(-1)
+        wait()
+        Services.ReplicatedStorage.LoadSaveRequests.RequestLoad:InvokeServer(ReloadToSlot)
+        repeat wait() until Client.leaderstats.Money.Value >= DupeAmt * 2
+        Notify("Success!", "Successfully duplicated your money :   )", 4)
+        if Library._flags.DisableSave then Library:UpdateToggle("DisableSave") wait() end
+        wait(1)
+        Functions.SaveSlot()
+        DupingCash = false
+        if Library._flags.DupeMoney then
+            Functions.DupeCash()    
+        end
+    end
+}
+
+local OldNamecall; OldNamecall = hookmetamethod(game, "__namecall", function(...)
+    if tostring(...) == "RequestSave" and Library._flags.DisableSave then
+        return true
+    end
+    return OldNamecall(...)
+end)
+
+for _, v in next, getgc() do
+    if type(v) == "function" and getfenv(v).script == Client.PlayerGui.PropertyPurchasingGUI.PropertyPurchasingClient then
+        local Functions = getfenv(v)
+        local enterPurchaseMode = Functions.enterPurchaseMode
+        getfenv(v).enterPurchaseMode = function(...)
+            if not DupingCash then
+                return enterPurchaseMode(...)
+            end
+            local props = {}
+            for _, v in next, Services.Workspace.Properties:GetChildren() do
+                if v:FindFirstChild("Owner") and v.Owner.Value == nil then
+                    table.insert(props, v)
+                end
+            end
+            local plot = props[math.random(1, #props)]
+            setupvalue(Functions.rotate, 3, 0)
+            setupvalue(enterPurchaseMode, 10, plot)
+            return
+        end
+        break
+    end
+end
+
+local UI = Library:Window("A")
+local Main = UI:New("Dupe")
+local Options = UI:New("Options")
+
+Main:Toggle("Disable Saving", "DisableSave", false)
+Main:Btn("Dupe Inventory", Functions.DupeInventory)
+Main:Toggle("Dupe Inventory (Loop)", "DupeInventory", false)
+Main:Btn("Dupe Money", Functions.DupeCash)
+Main:Toggle("Dupe Money (Loop)", "DupeMoney", false)
+Main:Btn("Save Slot", Functions.SaveSlot)
+
+Options:Btn("Created By Ataias#1115")
+Options:Btn("Unload Script", function()
+    Library._ui:Destroy()
+    DupingCash = false
+    hookmetamethod(game, "__namecall", OldNamecall)
+end)
+
+Services.UserInputService.InputEnded:Connect(function(inp)
+    if inp.KeyCode == Enum.KeyCode.LeftAlt then Library._ui.Enabled = not Library._ui.Enabled end
+end)
+
+Notify("Tech Hacks","Toggle For Dupe Hack Is Left Alt.", 10)
+
+if dragMod == nil then
+    getgenv().dragMod = true
+    local env = getsenv(game.Players.LocalPlayer.PlayerGui.ItemDraggingGUI.Dragger)
+    local moveDrag = env.moveDrag
+    local dragPos = getupvalue(env.moveDrag, 1)
+    
+    env.moveDrag = function(item)
+        if dragPos.Parent == nil then
+            dragPos = getupvalue(env.moveDrag, 1)
+        end
+        dragPos.maxForce = Vector3.new(1, 1, 1) * (dragMod and 9e9 or 17000)
+        dragPos.Parent:WaitForChild("BodyGyro").maxTorque = Vector3.new(1, 1, 1) * (dragMod and 9e9 or 200)
+        return moveDrag(item)
+    end
+end
+
+Notify("Tech Hacks", "Drag Hack Has Been Enabled.", 10)
+
+
+
+
+
+
+
+
+
+
+Notify("Tech Hacks","All Hacks Have Been Enabled!", 15)
